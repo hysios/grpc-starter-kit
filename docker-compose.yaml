@@ -1,0 +1,53 @@
+version: "3.3"
+services:
+  redis:
+    image: redis:6.2.6
+    volumes:
+      - "./data/redis:/data"
+    ports:
+      - 6379:6379
+  db:
+    image: mysql:5.7.29
+    restart: always
+    environment:
+      - MYSQL_DATABASE=platform
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8084:8080
+  nats:
+    image: nats:alpine3.15
+    restart: always
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+  etcd:
+    image: quay.io/coreos/etcd:v3.2.5
+    restart: always
+    ports:
+      - 2379:2379
+      - 2380:2380
+      - 4001:4001
+      - 7001:7001
+    volumes:
+      - ./data/etcd/:/var/etcd
+    command: >
+      /usr/local/bin/etcd --data-dir=/etcd-data --name node1 
+      --initial-advertise-peer-urls http://${HOST_IP}:2380
+      --listen-peer-urls http://0.0.0.0:2380 --advertise-client-urls http://${HOST_IP}:2379
+      --listen-client-urls http://0.0.0.0:2379 --initial-cluster node1=http://${HOST_IP}:2380
+  # prometheus:
+  #   iamge: prom/prometheus:v2.30.2
+  #   ports:
+  #     - 9090:9090
+  #   volumes:
+  #     - "./etc/prometheus.yml:/etc/prometheus/prometheus.yml"
+volumes:
+  data:
