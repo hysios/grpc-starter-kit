@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/hysios/Projects/mx/templates/grpc-starter-kit'
+buf generate
+wire
+make: Leaving directory `/Users/hysios/Projects/mx/templates/grpc-starter-kit'
+ 

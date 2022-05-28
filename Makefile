@@ -17,5 +17,4 @@ test:
 	@./tests.sh
 
 wire:
-	@wire 
-	@wire ./gateway
+	@wire ./...

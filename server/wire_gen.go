@@ -4,25 +4,21 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package server
 
 import (
+	"github.com/hysios/grpc-starter-kit/service"
 	"github.com/hysios/mx/platform/config"
 	"github.com/hysios/mx/platform/logger"
 	"github.com/hysios/mx/platform/model"
 	"github.com/hysios/mx/platform/policy"
-	"github.com/hysios/mx/platform/server"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
 
-import (
-	_ "github.com/joho/godotenv/autoload"
-)
-
 // Injectors from wire.go:
 
-func setupServer(addr string) (*grpc.Server, error) {
+func SetupServer(addr string) (*grpc.Server, error) {
 	configConfig, err := config.LoadDefault()
 	if err != nil {
 		return nil, err
@@ -36,21 +32,18 @@ func setupServer(addr string) (*grpc.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	grpcServer := server.BuildGPCServer(db, loggerLogger, enforcer)
-	return grpcServer, nil
+	server := service.BuildGPCServer(db, loggerLogger, enforcer)
+	return server, nil
 }
 
 // wire.go:
 
-func setupDB() {
+func SetupDB() {
 	config.SetupDB(func(db *gorm.DB, logger2 *logger.Logger) error {
 		log := logger2.Sugar()
 		log.Infof("auto migrates database")
 
-		if err := db.AutoMigrate(
-			&model.User{},
-			&model.Certificate{},
-		); err != nil {
+		if err := db.AutoMigrate(); err != nil {
 			log.Errorf("failed to migrate: %v", err)
 			return err
 		}

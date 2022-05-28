@@ -1,13 +1,19 @@
-# grpc-gateway-boilerplate
-
-[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/hysios/mx/platform.git)
+# grpc-starter-kit
 
 All the boilerplate you need to get started with writing grpc-gateway powered
 REST services in Go.
 
 ## Requirements
 
-Go 1.16+
+Go 1.18+
+
+## Clone from template
+
+use Github CLI util
+
+```bash
+gh repo create [new_service] --public --template hysios/grpc-starter-kit -c
+```
 
 ## Running
 
@@ -28,6 +34,12 @@ standalone web server instead:
 
 ```
 $ go run ./cmd/standalone/ --server-address dns:///0.0.0.0:10000
+```
+
+### Running the grpc server
+
+```
+$ go run ./cmd/server --server-address :10000
 ```
 
 ## Getting started
